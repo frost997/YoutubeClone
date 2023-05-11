@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import youtubeLogo from "../assets/logo.png";
+import LamaTube from "../assets/logo.png";
 import HomeIcon from "@mui/icons-material/Home";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
@@ -17,22 +17,19 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
-
+import { Link } from "react-router-dom";
 const Container = styled.div`
   flex: 1;
-  background-color: #202020;
+  background-color: ${({ theme }) => theme.bgLighter};
   height: 100vh;
-  color: white;
+  color: ${({ theme }) => theme.text};
   font-size: 14px;
-  top: 0;
   position: sticky;
-  padding: 0px 0px;
+  top: 0;
 `;
-
 const Wrapper = styled.div`
   padding: 18px 26px;
 `;
-
 const Logo = styled.div`
   display: flex;
   align-items: center;
@@ -49,17 +46,50 @@ const Item = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 7.5px 0px;
   cursor: pointer;
+  padding: 7.5px 0px;
+  &:hover {
+    background-color: ${({ theme }) => theme.soft};
+  }
 `;
-const Menu = () => {
+
+const Hr = styled.hr`
+  margin: 15px 0px;
+  border: 0.5px solid ${({ theme }) => theme.soft};
+`;
+
+const Login = styled.div``;
+const Button = styled.button`
+  padding: 5px 15px;
+  background-color: transparent;
+  border: 1px solid #3ea6ff;
+  color: #3ea6ff;
+  border-radius: 3px;
+  font-weight: 500;
+  margin-top: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const Title = styled.h2`
+  font-size: 14px;
+  font-weight: 500;
+  color: #aaaaaa;
+  margin-bottom: 20px;
+`;
+
+const Menu = ({ darkMode, setDarkMode }) => {
   return (
     <Container>
       <Wrapper>
-        <Logo>
-          <Img src={youtubeLogo} />
-          YouTube
-        </Logo>
+        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Logo>
+            <Img src={LamaTube} />
+            LamaTube
+          </Logo>
+        </Link>
         <Item>
           <HomeIcon />
           Home
@@ -72,6 +102,7 @@ const Menu = () => {
           <SubscriptionsOutlinedIcon />
           Subscriptions
         </Item>
+        <Hr />
         <Item>
           <VideoLibraryOutlinedIcon />
           Library
@@ -80,6 +111,16 @@ const Menu = () => {
           <HistoryOutlinedIcon />
           History
         </Item>
+        <Hr />
+        <Login>
+          Sign in to like videos, comment, and subscribe.
+          <Button>
+            <AccountCircleOutlinedIcon />
+            SIGN IN
+          </Button>
+        </Login>
+        <Hr />
+        <Title>BEST OF LAMATUBE</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
           Music
@@ -104,6 +145,7 @@ const Menu = () => {
           <LiveTvOutlinedIcon />
           Live
         </Item>
+        <Hr />
         <Item>
           <SettingsOutlinedIcon />
           Settings
@@ -116,9 +158,9 @@ const Menu = () => {
           <HelpOutlineOutlinedIcon />
           Help
         </Item>
-        <Item>
+        <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlinedIcon />
-          Dark Mode
+          {darkMode ? "Light" : "Dark"} Mode
         </Item>
       </Wrapper>
     </Container>
