@@ -1,62 +1,85 @@
-import React from "react";
-import styled from "styled-components";
-
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { format } from "timeago.js";
+
 const Container = styled.div`
-  width: 360px;
-  margin-bottom: 45px;
+  width: ${(props) => props.type !== "sm" && "360px"};
+  margin-bottom: ${(props) => (props.type === "sm" ? "10px" : "45px")};
   cursor: pointer;
+  display: ${(props) => props.type === "sm" && "flex"};
+  gap: 10px;
 `;
 
-const Img = styled.img`
+const Image = styled.img`
   width: 100%;
-  height: 202px;
+  height: ${(props) => (props.type === "sm" ? "120px" : "202px")};
   background-color: #999;
+  flex: 1;
 `;
 
 const Details = styled.div`
   display: flex;
-  margin-top: 16px;
+  margin-top: ${(props) => props.type !== "sm" && "16px"};
   gap: 12px;
+  flex: 1;
 `;
-const ChannelImg = styled.img`
+
+const ChannelImage = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 50%;
   background-color: #999;
+  display: ${(props) => props.type === "sm" && "none"};
 `;
 
-const Texts = styled.div`
-  /* font-size: 16px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text}; */
-`;
+const Texts = styled.div``;
+
 const Title = styled.h1`
   font-size: 16px;
   font-weight: 500;
   color: ${({ theme }) => theme.text};
 `;
+
 const ChannelName = styled.h2`
   font-size: 14px;
   color: ${({ theme }) => theme.textSoft};
   margin: 9px 0px;
 `;
+
 const Info = styled.div`
   font-size: 14px;
   color: ${({ theme }) => theme.textSoft};
 `;
 
-export const Card = () => {
+export const Card = ({ type, video }) => {
+  const [channel, setChannel] = useState({});
+
+  useEffect(() => {
+    const fetchChannels = async () => {
+      try {
+        const res = await axios.get(`/api/users/find/${video.userID}`);
+        setChannel(res.data);
+      } catch (error) {
+        throw error;
+      }
+    };
+    fetchChannels();
+  }, [video.userID]);
+
   return (
     <Link to="/video/test" style={{ textDecoration: "none" }}>
-      <Container>
-        <Img src="https://images.justwatch.com/poster/227125464/s718/cyberpunk-edgerunners.%7Bformat%7D" />
-        <Details>
-          <ChannelImg src="https://preview.redd.it/3j9secjn6q071.png?auto=webp&s=b0ede6d32a0d66b455d0347dce9f1e4bf96ee779" />
+      <Container type={type}>
+        <Image type={type} src={video.imgURL} />
+        <Details type={type}>
+          <ChannelImage type={type} src={channel.img} />
           <Texts>
-            <Title>Test Video</Title>
-            <ChannelName>Kelvin</ChannelName>
-            <Info>503k views . 1 day ago</Info>
+            <Title>{video.title}</Title>
+            <ChannelName>{channel.name}</ChannelName>
+            <Info>
+              {video.views} views • {format(video.createdAt)}
+            </Info>
           </Texts>
         </Details>
       </Container>

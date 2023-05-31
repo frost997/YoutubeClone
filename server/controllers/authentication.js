@@ -8,6 +8,7 @@ const signIn = async (req, res, next) => {
   try {
     const user = await User.findOne({ name: req.body.name });
     if (!user) {
+      console.log(req.body)
       return next(errorHandler(400, "Cannot find user"));
     } else {
       const isCorrect = await bcryptjs.compare(

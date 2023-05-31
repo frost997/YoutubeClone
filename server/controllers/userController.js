@@ -1,4 +1,5 @@
 import User from "../model/User.js";
+import Video from "../model/Video.js";
 import { errorHandler } from "../helper/error.js";
 
 const updateUser = async (req, res, next) => {
@@ -36,7 +37,6 @@ const deleteUser = async (req, res, next) => {
 };
 
 const getUser = async (req, res, next) => {
-  if (req.params.id === req.user.id) {
     try {
       const user = await User.findById(req.params.id);
       res.status(200).json(user);
@@ -44,7 +44,6 @@ const getUser = async (req, res, next) => {
       next(error);
     }
     return;
-  }
 };
 
 const subcribe = async (req, res, next) => {
@@ -71,10 +70,48 @@ const unsubcribe = async (req, res, next) => {
       $inc: { subscribers: -1 },
     });
     res.status(200).json("unSubscribtion successfull");
+  } catch (error) { 
+    next(error);
+  }
+  return;
+};
+
+const like = async (req, res, next) => {
+  try {
+    const id = req.user.id;
+    const videoID = req.params.videoID;
+    await Video.findByIdAndUpdate(videoID, {
+      $addToSet: {
+        likes: id,
+      },
+      $pull: {
+        dislikes: id,
+      },
+    });
+    res.status(200).json("Video has been like");
   } catch (error) {
     next(error);
   }
   return;
 };
 
-export { updateUser, deleteUser, getUser, subcribe, unsubcribe };
+const disLike = async (req, res, next) => {
+  try {
+    const id = req.user.id;
+    const videoID = req.params.videoID;
+    await Video.findByIdAndUpdate(videoID, {
+      $addToSet: {
+        dislikes: id,
+      },
+      $pull: {
+        likes: id,
+      },
+    });
+    res.status(200).json("Video has been dislike");
+  } catch (error) {
+    next(error);
+  }
+  return;
+};
+
+export { updateUser, deleteUser, getUser, subcribe, unsubcribe, like, disLike };

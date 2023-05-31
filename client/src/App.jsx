@@ -2,10 +2,11 @@ import { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Menu from "./component/Menu";
 import Navbar from "./component/Navbar";
-import { darkTheme, lighTheme } from "./utils/Theme";
+import { darkTheme, lightTheme } from "./utils/Theme";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Video } from "./pages/Video";
 import { Home } from "./pages/Home";
+import SignIn from "./pages/SignIn";
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ const Wrapper = styled.div`
 const App = () => {
   const [darkMode, setDarkMode] = useState(true);
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lighTheme}>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <Container>
         <BrowserRouter>
           <Menu darkMode={darkMode} setDarkMode={setDarkMode} />
@@ -29,10 +30,15 @@ const App = () => {
             <Navbar />
             <Wrapper>
               <Routes>
-                <Route path="/" />
-                <Route index element={<Home />} />
-                <Route path="video" />
-                <Route path=":id" element={<Video />} />
+                <Route path="/">
+                  <Route index element={<Home type="random" />} />
+                  <Route path="trends" element={<Home type="trends" />} />
+                  <Route path="subscribtions" element={<Home type="subs" />} />
+                  <Route path="signin" element={<SignIn />} />
+                  <Route path="video">
+                    <Route path=":id" element={<Video />} />
+                  </Route>
+                </Route>
               </Routes>
             </Wrapper>
           </Main>

@@ -85,7 +85,7 @@ const addView = async (req, res, next) => {
 
 const random = async (req, res, next) => {
   try {
-    const video = await Video.aggregate([{ $sample: { size: 1 } }]);
+    const video = await Video.aggregate([{ $sample: { size: 3 } }]);
     if (!video) {
       return next(errorHandler(404, "video not found"));
     }
